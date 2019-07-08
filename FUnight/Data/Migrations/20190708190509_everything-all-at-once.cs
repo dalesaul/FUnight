@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FUnight.Data.Migrations
+namespace FUnight.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class everythingallatonce : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,7 +40,11 @@ namespace FUnight.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    UserGroupId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -66,6 +70,31 @@ namespace FUnight.Data.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Activities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SuggestedDate = table.Column<DateTime>(nullable: false),
+                    FoodAvailable = table.Column<bool>(nullable: false),
+                    CostEstimate = table.Column<double>(nullable: false),
+                    Rating = table.Column<int>(nullable: true),
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    ActivityTypeId = table.Column<int>(nullable: false),
+                    UserGroupId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Activities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Activities_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -153,6 +182,82 @@ namespace FUnight.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ActivityTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Type = table.Column<string>(nullable: false),
+                    FUnActivityId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActivityTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ActivityTypes_Activities_FUnActivityId",
+                        column: x => x.FUnActivityId,
+                        principalTable: "Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserGroups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: false),
+                    ApplicationUserId = table.Column<int>(nullable: false),
+                    FUnActivityId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserGroups", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserGroups_Activities_FUnActivityId",
+                        column: x => x.FUnActivityId,
+                        principalTable: "Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "ActivityTypes",
+                columns: new[] { "Id", "FUnActivityId", "Type" },
+                values: new object[,]
+                {
+                    { 1, null, "Park" },
+                    { 2, null, "Dining Out" },
+                    { 3, null, "BBQ at Home" },
+                    { 4, null, "Go to Movies" },
+                    { 5, null, "Sporting Event" },
+                    { 6, null, "Local Event" },
+                    { 7, null, "Ritual Sacriface" },
+                    { 8, null, "Overthrow the Gov't" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserGroups",
+                columns: new[] { "Id", "ApplicationUserId", "FUnActivityId", "Name" },
+                values: new object[,]
+                {
+                    { 4, 0, null, "MMMB group" },
+                    { 2, 0, null, "Cohort 1" },
+                    { 3, 0, null, "lunchtime D&D" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Activities_ApplicationUserId",
+                table: "Activities",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ActivityTypes_FUnActivityId",
+                table: "ActivityTypes",
+                column: "FUnActivityId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -191,10 +296,18 @@ namespace FUnight.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroups_FUnActivityId",
+                table: "UserGroups",
+                column: "FUnActivityId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ActivityTypes");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -211,7 +324,13 @@ namespace FUnight.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "UserGroups");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Activities");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

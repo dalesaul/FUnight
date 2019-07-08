@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace FUnight.Data.Migrations
+namespace FUnight.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190702151341_updated-FUnActivity-Model")]
-    partial class updatedFUnActivityModel
+    [Migration("20190708192110_cleaning-up-ActivtiyType-model")]
+    partial class cleaningupActivtiyTypemodel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,11 +87,9 @@ namespace FUnight.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ActivityType_Id");
+                    b.Property<int>("ActivityTypeId");
 
                     b.Property<string>("ApplicationUserId");
-
-                    b.Property<string>("ApplicationUser_Id");
 
                     b.Property<double>("CostEstimate");
 
@@ -101,7 +99,7 @@ namespace FUnight.Data.Migrations
 
                     b.Property<DateTime>("SuggestedDate");
 
-                    b.Property<int>("UserGroup_Id");
+                    b.Property<int>("UserGroupId");
 
                     b.HasKey("Id");
 
@@ -116,7 +114,7 @@ namespace FUnight.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ApplicationUser_Id");
+                    b.Property<int>("ApplicationUserId");
 
                     b.Property<int?>("FUnActivityId");
 
@@ -132,9 +130,21 @@ namespace FUnight.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            ApplicationUser_Id = 0,
+                            Id = 4,
+                            ApplicationUserId = 0,
                             Name = "MMMB group"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ApplicationUserId = 0,
+                            Name = "Cohort 1"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ApplicationUserId = 0,
+                            Name = "lunchtime D&D"
                         });
                 });
 
@@ -318,7 +328,7 @@ namespace FUnight.Data.Migrations
                     b.Property<string>("LastName")
                         .IsRequired();
 
-                    b.Property<int>("UserGroup_Id");
+                    b.Property<int>("UserGroupId");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
