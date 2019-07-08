@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using FUnight.Data;
 using FUnight.Models;
 using Microsoft.AspNetCore.Identity;
+using FUnight.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FUnight.Controllers
 {
@@ -27,14 +29,24 @@ namespace FUnight.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: FUnActivities
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Activities.ToListAsync());
+
+            ApplicationUser user = await GetCurrentUserAsync();
+
+            List <FUnActivity> activityList = await _context.Activities
+                .Where(activity => activity.ApplicationUserId == user.Id)
+                .ToListAsync();
+
+
+            return View(activityList);
         }
 
         // GET: FUnActivities/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ApplicationUser user = await GetCurrentUserAsync();
             if (id == null)
             {
                 return NotFound();
@@ -51,9 +63,29 @@ namespace FUnight.Controllers
         }
 
         // GET: FUnActivities/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            List<ActivityType> ActivityTypes = await _context.ActivityTypes.ToListAsync();
+            List<UserGroup> UserGroups = await _context.UserGroups.ToListAsync();
+
+            var viewModel = new CreateFUnActivityViewModel()
+            {
+                ActivityTypeOptions = ActivityTypes.Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Type
+                }).ToList(),
+
+                UserGroupOptions = UserGroups.Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.Name
+                }).ToList()
+
+        };
+
+        
+            return View(viewModel);
         }
 
         // POST: FUnActivities/Create
@@ -61,15 +93,32 @@ namespace FUnight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,SuggestedDate,FoodAvailable,CostEstimate,Rating,ApplicationUser_Id,ActivityType_Id,UserGroup_Id")] FUnActivity fUnActivity)
+        public async Task<IActionResult> Create(CreateFUnActivityViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(fUnActivity);
+                _context.Add(vm.FUnActivity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(fUnActivity);
+
+            List<ActivityType> activityTypes = await _context.ActivityTypes.ToListAsync();
+
+            vm.ActivityTypeOptions = activityTypes.Select(a => new SelectListItem
+            {
+                Value = a.Id.ToString(),
+                Text = a.Type
+            }).ToList();
+                
+            List<UserGroup> userGroups = await _context.UserGroups.ToListAsync();
+
+            vm.UserGroupOptions = userGroups.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = u.Name
+            }).ToList();
+
+            return View(vm.FUnActivity);
         }
 
         // GET: FUnActivities/Edit/5
@@ -93,9 +142,9 @@ namespace FUnight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SuggestedDate,FoodAvailable,CostEstimate,Rating,ApplicationUser_Id,ActivityType_Id,UserGroup_Id")] FUnActivity fUnActivity)
+        public async Task<IActionResult> Edit(int id, CreateFUnActivityViewModel vm)
         {
-            if (id != fUnActivity.Id)
+            if (id != vm.FUnActivity.Id)
             {
                 return NotFound();
             }
@@ -104,12 +153,12 @@ namespace FUnight.Controllers
             {
                 try
                 {
-                    _context.Update(fUnActivity);
+                    _context.Update(vm.FUnActivity);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FUnActivityExists(fUnActivity.Id))
+                    if (!FUnActivityExists(vm.FUnActivity.Id))
                     {
                         return NotFound();
                     }
@@ -120,7 +169,7 @@ namespace FUnight.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(fUnActivity);
+            return View(vm.FUnActivity);
         }
 
         // GET: FUnActivities/Delete/5

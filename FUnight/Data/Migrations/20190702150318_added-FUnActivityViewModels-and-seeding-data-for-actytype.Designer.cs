@@ -4,14 +4,16 @@ using FUnight.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FUnight.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190702150318_added-FUnActivityViewModels-and-seeding-data-for-actytype")]
+    partial class addedFUnActivityViewModelsandseedingdataforactytype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,14 +27,10 @@ namespace FUnight.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("FUnActivityId");
-
                     b.Property<string>("Type")
                         .IsRequired();
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FUnActivityId");
 
                     b.ToTable("ActivityTypes");
 
@@ -85,9 +83,11 @@ namespace FUnight.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ActivityTypeId");
+                    b.Property<int>("ActivityType_Id");
 
                     b.Property<string>("ApplicationUserId");
+
+                    b.Property<string>("ApplicationUser_Id");
 
                     b.Property<double>("CostEstimate");
 
@@ -97,7 +97,7 @@ namespace FUnight.Data.Migrations
 
                     b.Property<DateTime>("SuggestedDate");
 
-                    b.Property<int>("UserGroupId");
+                    b.Property<int>("UserGroup_Id");
 
                     b.HasKey("Id");
 
@@ -112,37 +112,21 @@ namespace FUnight.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ApplicationUserId");
-
-                    b.Property<int?>("FUnActivityId");
+                    b.Property<int>("ApplicationUser_Id");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FUnActivityId");
-
                     b.ToTable("UserGroups");
 
                     b.HasData(
                         new
                         {
-                            Id = 4,
-                            ApplicationUserId = 0,
+                            Id = 1,
+                            ApplicationUser_Id = 0,
                             Name = "MMMB group"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ApplicationUserId = 0,
-                            Name = "Cohort 1"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ApplicationUserId = 0,
-                            Name = "lunchtime D&D"
                         });
                 });
 
@@ -326,16 +310,9 @@ namespace FUnight.Data.Migrations
                     b.Property<string>("LastName")
                         .IsRequired();
 
-                    b.Property<int>("UserGroupId");
+                    b.Property<int>("UserGroup_Id");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
-                });
-
-            modelBuilder.Entity("FUnight.Models.ActivityType", b =>
-                {
-                    b.HasOne("FUnight.Models.FUnActivity")
-                        .WithMany("ActivityTypes")
-                        .HasForeignKey("FUnActivityId");
                 });
 
             modelBuilder.Entity("FUnight.Models.FUnActivity", b =>
@@ -343,13 +320,6 @@ namespace FUnight.Data.Migrations
                     b.HasOne("FUnight.Models.ApplicationUser")
                         .WithMany("Activities")
                         .HasForeignKey("ApplicationUserId");
-                });
-
-            modelBuilder.Entity("FUnight.Models.UserGroup", b =>
-                {
-                    b.HasOne("FUnight.Models.FUnActivity")
-                        .WithMany("UserGroups")
-                        .HasForeignKey("FUnActivityId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -4,14 +4,16 @@ using FUnight.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FUnight.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190708160127_Changed-FUnActivity-Model")]
+    partial class ChangedFUnActivityModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,7 +103,11 @@ namespace FUnight.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ActivityTypeId");
+
                     b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("UserGroupId");
 
                     b.ToTable("Activities");
                 });
@@ -128,7 +134,7 @@ namespace FUnight.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 4,
+                            Id = 1,
                             ApplicationUserId = 0,
                             Name = "MMMB group"
                         },
@@ -340,9 +346,19 @@ namespace FUnight.Data.Migrations
 
             modelBuilder.Entity("FUnight.Models.FUnActivity", b =>
                 {
-                    b.HasOne("FUnight.Models.ApplicationUser")
+                    b.HasOne("FUnight.Models.ActivityType", "ActivityType")
+                        .WithMany()
+                        .HasForeignKey("ActivityTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("FUnight.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Activities")
                         .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("FUnight.Models.UserGroup", "UserGroup")
+                        .WithMany()
+                        .HasForeignKey("UserGroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("FUnight.Models.UserGroup", b =>

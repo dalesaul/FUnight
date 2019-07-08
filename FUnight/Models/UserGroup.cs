@@ -12,7 +12,10 @@ namespace FUnight.Models
         public int Id { get; set; }
 
         [Required]
-        public int ApplicationUser_Id { get; set; }
+        public string Name { get; set; }
+
+        [Required]
+        public int ApplicationUserId { get; set; }
 
     }
 }

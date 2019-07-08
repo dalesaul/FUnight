@@ -19,7 +19,7 @@ namespace FUnight.Data.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<int>(
-                name: "UserGroup_Id",
+                name: "UserGroupId",
                 table: "AspNetUsers",
                 nullable: true);
 
@@ -39,10 +39,10 @@ namespace FUnight.Data.Migrations
                     FoodAvailable = table.Column<bool>(nullable: false),
                     CostEstimate = table.Column<double>(nullable: false),
                     Rating = table.Column<int>(nullable: true),
-                    ApplicationUser_Id = table.Column<int>(nullable: false),
-                    ActivityType_Id = table.Column<int>(nullable: false),
-                    UserGroup_Id = table.Column<int>(nullable: false),
-                    ApplicationUserId = table.Column<string>(nullable: true)
+                    ApplicationUserId = table.Column<int>(nullable: false),
+                    ActivityTypeId = table.Column<int>(nullable: false),
+                    UserGroupId = table.Column<int>(nullable: false)
+                    
                 },
                 constraints: table =>
                 {
@@ -74,7 +74,7 @@ namespace FUnight.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApplicationUser_Id = table.Column<int>(nullable: false)
+                    ApplicationUserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -107,7 +107,7 @@ namespace FUnight.Data.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "UserGroup_Id",
+                name: "UserGroupId",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(

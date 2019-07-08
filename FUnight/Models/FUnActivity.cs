@@ -22,10 +22,14 @@ namespace FUnight.Models
 
         public int? Rating { get; set; }
 
-        public int ApplicationUser_Id { get; set; }
-        public int ActivityType_Id { get; set; }
-        public int UserGroup_Id { get; set; }
+        public string ApplicationUserId { get; set; }
+        public int ActivityTypeId { get; set; }
+        public int UserGroupId { get; set; }
 
+        //public ApplicationUser ApplicationUser { get; set; }
+
+        public List<ActivityType> ActivityTypes { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
 
 
 
