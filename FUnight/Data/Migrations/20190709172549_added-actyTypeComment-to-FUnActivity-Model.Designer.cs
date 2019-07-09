@@ -4,14 +4,16 @@ using FUnight.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FUnight.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190709172549_added-actyTypeComment-to-FUnActivity-Model")]
+    partial class addedactyTypeCommenttoFUnActivityModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,8 +105,6 @@ namespace FUnight.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("UserGroupId");
-
                     b.ToTable("Activities");
                 });
 
@@ -116,10 +116,14 @@ namespace FUnight.Migrations
 
                     b.Property<int>("ApplicationUserId");
 
+                    b.Property<int?>("FUnActivityId");
+
                     b.Property<string>("Name")
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FUnActivityId");
 
                     b.ToTable("UserGroups");
 
@@ -339,11 +343,13 @@ namespace FUnight.Migrations
                     b.HasOne("FUnight.Models.ApplicationUser")
                         .WithMany("Activities")
                         .HasForeignKey("ApplicationUserId");
+                });
 
-                    b.HasOne("FUnight.Models.UserGroup", "UserGroup")
-                        .WithMany()
-                        .HasForeignKey("UserGroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity("FUnight.Models.UserGroup", b =>
+                {
+                    b.HasOne("FUnight.Models.FUnActivity")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("FUnActivityId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
