@@ -26,10 +26,10 @@ namespace FUnight.Models
         public int ActivityTypeId { get; set; }
         public int UserGroupId { get; set; }
 
-        //public ApplicationUser ApplicationUser { get; set; }
+        public string ActyTypeComment { get; set; }
 
-        public List<ActivityType> ActivityTypes { get; set; }
-        public List<UserGroup> UserGroups { get; set; }
+        public ActivityType ActivityType { get; set; }
+        public UserGroup UserGroup { get; set; }
 
 
 
