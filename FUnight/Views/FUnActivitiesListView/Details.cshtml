@@ -52,7 +52,17 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UserGroup.Name)
         </dd>
-    </dl>
+      </dl>
+    <div class="form-group">
+        <a class="btn btn-primary"
+           asp-controller="FUnActivitiesListView" asp-action="UpvoteRatingOnFUnActivity" asp-route-id="@Model.Id">
+            Upvote
+        </a>
+        <a class="btn btn-primary"
+           asp-controller="FUnActivitiesListView" asp-action="DownvoteRatingOnFUnActivity" asp-route-id="@Model.Id">
+            Downvote
+        </a>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
