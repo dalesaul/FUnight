@@ -17,7 +17,7 @@ namespace FUnight.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-    
+
         private readonly UserManager<ApplicationUser> _userManager;
 
         public FUnActivitiesListViewController(ApplicationDbContext context,
@@ -31,7 +31,7 @@ namespace FUnight.Controllers
 
 
         // GET: FUnActivitiesListView
-     
+
         public async Task<IActionResult> Index()
         {
 
@@ -40,7 +40,7 @@ namespace FUnight.Controllers
             List<FUnActivity> activityList = await _context.Activities
                 //.Where(activity => activity.ApplicationUserId == user.Id)
                 .Include(f => f.ActivityType)
-                .OrderBy(a => a.Rating)
+                .OrderByDescending(a => a.Rating)
                 .ToListAsync();
 
 
@@ -193,6 +193,47 @@ namespace FUnight.Controllers
         private bool FUnActivityExists(int id)
         {
             return _context.Activities.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> UpvoteRatingOnFUnActivity([FromRoute] int id)
+        {
+            FUnActivity currentActivity = await _context.Activities.FirstOrDefaultAsync(a => a.Id == id);
+
+            if (currentActivity.Rating == null)
+            {
+                currentActivity.Rating = 0; currentActivity.Rating++;
+            }
+            else
+            {
+                currentActivity.Rating++;
+            }
+            
+
+            _context.Update(currentActivity);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        public async Task<IActionResult> DownvoteRatingOnFUnActivity([FromRoute] int id)
+        {
+            FUnActivity currentActivity = await _context.Activities.FirstOrDefaultAsync(a => a.Id == id);
+
+            if (currentActivity.Rating == null)
+            {
+                currentActivity.Rating = 0; currentActivity.Rating--;
+            }
+
+            else
+            {
+                currentActivity.Rating--;
+            }
+
+            _context.Update(currentActivity);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+
         }
     }
 }

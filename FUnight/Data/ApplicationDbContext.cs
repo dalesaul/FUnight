@@ -57,7 +57,7 @@ namespace FUnight.Data
                 new ActivityType()
                 {
                     Id = 7,
-                    Type = "Ritual Sacriface"
+                    Type = "Ritual Sacrifice"
                 },
                 new ActivityType()
                 {
