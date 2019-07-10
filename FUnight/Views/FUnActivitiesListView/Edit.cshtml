@@ -1,6 +1,6 @@
-﻿@model FUnight.Models.FUnActivity
+﻿@model FUnight.Models.ViewModels.EditFUnActivityViewModel
 
-@{
+@{ 
     ViewData["Title"] = "Edit";
 }
 
@@ -12,45 +12,47 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="FUnActivity.Id" />
             <div class="form-group">
-                <label asp-for="SuggestedDate" class="control-label"></label>
-                <input asp-for="SuggestedDate" class="form-control" />
-                <span asp-validation-for="SuggestedDate" class="text-danger"></span>
+                <label asp-for="FUnActivity.SuggestedDate" class="control-label"></label>
+                <input asp-for="FUnActivity.SuggestedDate" class="form-control" />
+                <span asp-validation-for="FUnActivity.SuggestedDate" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="FoodAvailable" /> @Html.DisplayNameFor(model => model.FoodAvailable)
+                    <input class="form-check-input" asp-for="FUnActivity.FoodAvailable" /> @Html.DisplayNameFor(model => model.FUnActivity.FoodAvailable)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="CostEstimate" class="control-label"></label>
-                <input asp-for="CostEstimate" class="form-control" />
-                <span asp-validation-for="CostEstimate" class="text-danger"></span>
+                <label asp-for="FUnActivity.CostEstimate" class="control-label"></label>
+                <input asp-for="FUnActivity.CostEstimate" class="form-control" />
+                <span asp-validation-for="FUnActivity.CostEstimate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
+                <label asp-for="FUnActivity.Rating" class="control-label"></label>
+                <input asp-for="FUnActivity.Rating" class="form-control" />
+                <span asp-validation-for="FUnActivity.Rating" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FUnActivity.ActivityTypeId" class="control-label"></label>
+                <select asp-for="FUnActivity.ActivityTypeId" class="form-control" asp-items="@Model.ActivityTypeOptions"></select>
+                <span asp-validation-for="FUnActivity.ActivityTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ApplicationUserId" class="control-label"></label>
-                <select asp-for="ApplicationUserId" class="form-control" asp-items="ViewBag.ApplicationUserId"></select>
-                <span asp-validation-for="ApplicationUserId" class="text-danger"></span>
+                <label asp-for="FUnActivity.ActyTypeComment" class="control-label"></label>
+                <input asp-for="FUnActivity.ActyTypeComment" class="form-control" />
+                <span asp-validation-for="FUnActivity.ActyTypeComment" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="ActivityTypeId" class="control-label"></label>
-                <input asp-for="ActivityTypeId" class="form-control" />
-                <span asp-validation-for="ActivityTypeId" class="text-danger"></span>
+                <label asp-for="FUnActivity.UserGroupId" class="control-label"></label>
+                <Select asp-for="FUnActivity.UserGroupId" class="form-control" asp-items="@Model.UserGroupOptions"></Select>
+                <span asp-validation-for="FUnActivity.ActivityTypeId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserGroupId" class="control-label"></label>
-                <input asp-for="UserGroupId" class="form-control" />
-                <span asp-validation-for="UserGroupId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
         </form>
     </div>
 </div>

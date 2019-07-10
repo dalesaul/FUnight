@@ -137,20 +137,45 @@ namespace FUnight.Controllers
                 return NotFound();
             }
 
-            var fUnActivity = await _context.Activities.FindAsync(id);
-            if (fUnActivity == null)
+            var editActivity = await _context.Activities.FindAsync(id);
+
+            if (editActivity == null)
             {
                 return NotFound();
             }
-            return View(fUnActivity);
+
+            var activityTypes = await _context.ActivityTypes.ToListAsync();
+
+            var userGroups = await _context.UserGroups.ToListAsync();
+
+            var vm = new EditFUnActivityViewModel()
+            {
+                FUnActivity = editActivity,
+                ActivityTypeOptions = activityTypes.Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Type
+                }).ToList(),
+                UserGroupOptions = userGroups.Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.Name
+                }).ToList()
+            };
+            return View(vm);
         }
+
+    
+
+
+            
 
         // POST: FUnActivities/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CreateFUnActivityViewModel vm)
+        public async Task<IActionResult> Edit(int id, EditFUnActivityViewModel vm)
         {
             if (id != vm.FUnActivity.Id)
             {

@@ -9,6 +9,7 @@ using FUnight.Data;
 using FUnight.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using FUnight.Models.ViewModels;
 
 namespace FUnight.Controllers
 {
@@ -97,12 +98,32 @@ namespace FUnight.Controllers
                 return NotFound();
             }
 
-            var fUnActivity = await _context.Activities.FindAsync(id);
-            if (fUnActivity == null)
+            var editActivity = await _context.Activities.FindAsync(id);
+
+            if (editActivity == null)
             {
                 return NotFound();
             }
-            return View(fUnActivity);
+
+            var activityTypes = await _context.ActivityTypes.ToListAsync();
+
+            var userGroups = await _context.UserGroups.ToListAsync();
+
+            var vm = new EditFUnActivityViewModel()
+            {
+                FUnActivity = editActivity,
+                ActivityTypeOptions = activityTypes.Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Type
+                }).ToList(),
+                UserGroupOptions = userGroups.Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.Name
+                }).ToList()
+            };
+            return View(vm);
         }
 
         // POST: FUnActivitiesListView/Edit/5
@@ -110,9 +131,9 @@ namespace FUnight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SuggestedDate,FoodAvailable,CostEstimate,Rating,ApplicationUserId,ActivityTypeId,UserGroupId")] FUnActivity fUnActivity)
+        public async Task<IActionResult> Edit(int id, EditFUnActivityViewModel vm)
         {
-            if (id != fUnActivity.Id)
+            if (id != vm.FUnActivity.Id)
             {
                 return NotFound();
             }
@@ -121,12 +142,12 @@ namespace FUnight.Controllers
             {
                 try
                 {
-                    _context.Update(fUnActivity);
+                    _context.Update(vm.FUnActivity);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FUnActivityExists(fUnActivity.Id))
+                    if (!FUnActivityExists(vm.FUnActivity.Id))
                     {
                         return NotFound();
                     }
@@ -137,7 +158,7 @@ namespace FUnight.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(fUnActivity);
+            return View(vm.FUnActivity);
         }
 
         // GET: FUnActivitiesListView/Delete/5
