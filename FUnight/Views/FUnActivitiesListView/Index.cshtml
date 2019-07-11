@@ -4,7 +4,8 @@
     ViewData["Title"] = "All Suggestions";
 }
 
-<h1>Index</h1>
+<h1>Current FUNactivity Standings</h1>
+<h5>~click on details to vote~</h5>
 
 <table>
     <thead>
@@ -35,7 +36,7 @@
                 @Html.DisplayFor(modelItem => item.SuggestedDate)
             </td>
            
-            <td>
+            <td class="rating-cell">
                 @Html.DisplayFor(modelItem => item.Rating)
             </td>
             
@@ -47,9 +48,9 @@
                 @Html.DisplayFor(modelItem => item.ActyTypeComment)
             </td>
             <td>
-                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
+                
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                
             </td>
         </tr>
 }
