@@ -20,6 +20,7 @@ namespace FUnight.Models
         [Display(Name ="Last Name")]
         public string LastName { get; set; }
 
+        [Display(Name = "User Group")]
         public int UserGroupId { get; set; }
 
         public virtual ICollection<FUnActivity> Activities { get; set; }

@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.Rating)
             </th>
             
-            <th>
+            <th class="rating-cell">
                 @Html.DisplayNameFor(model => model.ActivityType.Type)
             </th>
             
@@ -32,19 +32,19 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+            <td class="table-padding">
                 @Html.DisplayFor(modelItem => item.SuggestedDate)
             </td>
            
-            <td class="rating-cell">
+            <td class="rating-cell table-padding">
                 @Html.DisplayFor(modelItem => item.Rating)
             </td>
             
-            <td>
+            <td class="table-padding">
                 @Html.DisplayFor(modelItem => item.ActivityType.Type)
             </td>
             
-            <td>
+            <td class="table-padding">
                 @Html.DisplayFor(modelItem => item.ActyTypeComment)
             </td>
             <td>

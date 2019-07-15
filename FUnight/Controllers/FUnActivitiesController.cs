@@ -181,11 +181,12 @@ namespace FUnight.Controllers
             {
                 return NotFound();
             }
-
+            ApplicationUser user = await GetCurrentUserAsync();
             if (ModelState.IsValid)
             {
                 try
                 {
+                    vm.FUnActivity.ApplicationUserId = user.Id;
                     _context.Update(vm.FUnActivity);
                     await _context.SaveChangesAsync();
                 }

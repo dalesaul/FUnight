@@ -54,18 +54,18 @@
         </dd>
       </dl>
     <div class="form-group">
-        <a class="btn btn-primary"
+        <a class="btn btn-outline-success"
            asp-controller="FUnActivitiesListView" asp-action="UpvoteRatingOnFUnActivity" asp-route-id="@Model.Id">
             Upvote
         </a>
-        <a class="btn btn-primary"
+        <a class="btn btn-outline-danger"
            asp-controller="FUnActivitiesListView" asp-action="DownvoteRatingOnFUnActivity" asp-route-id="@Model.Id">
             Downvote
         </a>
     </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <*@@*a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>*@ |
+    <a asp-action="Index">Back to List</a> |
 </div>
